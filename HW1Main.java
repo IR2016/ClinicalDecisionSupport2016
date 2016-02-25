@@ -4,13 +4,7 @@ import java.util.Map;
 import Classes.Path;
 import PreProcessData.*;
 
-/**
- * !!! YOU CANNOT CHANGE ANYTHING IN THIS CLASS !!! This is for INFSCI 2140 in
- * 2015
- * 
- * Main class for running your HW1.
- * 
- */
+
 public class HW1Main {
 
 	public static void main(String[] args) throws Exception {
@@ -20,24 +14,19 @@ public class HW1Main {
 
                 // main entrance
 		startTime=System.currentTimeMillis(); //star time of running code
-		hm1.PreProcess("trecweb");
+		hm1.PreProcess("trectext");
 		endTime=System.currentTimeMillis(); //end time of running code
 		System.out.println("web corpus running time: "+(endTime-startTime)/60000.0+" min");
 
-//                startTime=System.currentTimeMillis(); //star time of running code
-//		hm1.PreProcess("trectext");
-//		endTime=System.currentTimeMillis(); //end time of running code
-//		System.out.println("text corpus running time: "+(endTime-startTime)/60000.0+" min");
+
 
 	}
 
 	public void PreProcess(String dataType) throws Exception {
 		// Loading the collection file and initiate the DocumentCollection class
 		DocumentCollection corpus;
-		if (dataType.equals("trectext"))
-			corpus = new TrectextCollection();
-		else
-			corpus = new TrecwebCollection();
+		corpus = new TrectextCollection();
+
 
 		// loading stopword list and initiate the StopWordRemover and WordNormalizer class
 		StopWordRemover stopwordRemover = new StopWordRemover();
@@ -57,11 +46,8 @@ public class HW1Main {
 
 			// load document content
 
-                        char[] content = (char[]) doc.get(docno);
-                        
-//                        String strCon = (String) doc.get(docno);
-//			char[] content = strCon.toCharArray();
-System.out.println(docno);
+			char[] content = (char[]) doc.get(docno);
+
 			// write docno into the result file
 			wr.append(docno + "\n");
 
@@ -81,8 +67,6 @@ System.out.println(docno);
 				// into result file
 				if (!stopwordRemover.isStopword(word)) {
                                     wr.append(normalizer.stem(word) + " ");
-					//stemmed format of each word is written into result file
-//System.out.println(normalizer.stem(word));
                                 }
 						
 			}

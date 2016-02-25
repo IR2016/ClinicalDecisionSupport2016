@@ -2,7 +2,6 @@ package PreProcessData;
 import Classes.Stemmer;
 
 /**
- * This file is for the assignment of INFSCI 2140 in 2016 Spring
  *
  * This class is used for extract the stem of certain word by calling stemmer
  */
@@ -28,8 +27,7 @@ public class WordNormalizer {
                 s.add(chars, chars.length);
                 s.stem();
                 str = s.toString();
-//System.out.println(str);                
-//System.exit(100);               
+
                 
 		return str;
 	}

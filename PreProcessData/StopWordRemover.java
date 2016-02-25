@@ -7,12 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
-/**
- * This file is for the assignment of INFSCI 2140 in 2016 Spring
- *
- * StopWordRemover is a class takes charge of judging whether a given word
- * is a stopword by calling the method <i>isStopword(word)</i>.
- */
+
 public class StopWordRemover {
 	//you can add essential private methods or variables
 	HashSet<String> stopWordSet = new HashSet<String>();
