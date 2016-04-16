@@ -1,9 +1,14 @@
 package PreProcessData;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
 import Classes.Path;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -22,69 +27,57 @@ public class TrectextCollection implements DocumentCollection {
         private BufferedReader reader = null; 
         private String line = null;
         private Map<String, Object> doc = new HashMap<String,Object>();
-        
+        private List<File> filelist;
+        private int filenum = 0;
 	// YOU SHOULD IMPLEMENT THIS METHOD
 	public TrectextCollection() throws IOException {
 		// This constructor should open the file in Path.DataTextDir
 		// and also should make preparation for function nextDocument()
                 // Do not load the whole corpus into memory!!!
 	
-            // open and read the trectext file
-            fis = new FileInputStream(Path.DataTextDir);
+
+			
+
+			System.out.println("acquiring file list");
+			filelist = new ArrayList<File>();
+			filelist = getFileList(Path.DataTextDir);
+			
+            fis = new FileInputStream(filelist.get(filenum).getAbsoluteFile());
             reader = new BufferedReader(new InputStreamReader(fis));
-            
+            System.out.println("reading files");
             
 	}
 	
+
+	public List<File> getFileList(String strPath) {
+        File dir = new File(strPath);
+        File[] files = dir.listFiles(); 
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                String fileName = files[i].getName();
+                if (files[i].isDirectory()) { 
+                    getFileList(files[i].getAbsolutePath()); 
+                } 
+                else  { 
+                    String strFileName = files[i].getAbsolutePath();
+                   // System.out.println("---" + strFileName);
+                    filelist.add(files[i]);
+                } 
+            }
+
+        }
+        return filelist;
+    }
 	// YOU SHOULD IMPLEMENT THIS METHOD
-	public Map<String, Object> nextDocument() throws IOException {
-		// this method should load one document from the corpus, and return this document's number and content.
-		// the returned document should never be returned again.
-		// when no document left, return null
-		// NTT: remember to close the file that you opened, when you do not use it any more
-            Pattern pDocBegin = Pattern.compile("<DOC>");
-            Pattern pDocEnd = Pattern.compile("</DOC>");
-            // match file withe patttern to get docno and content
-            Pattern pNoAndText = Pattern.compile("<DOC>.*<DOCNO>\\s*(.*)\\s*</DOCNO>.*<TEXT>\\s*(.*)\\s*</TEXT>.*</DOC>");
-            String docStr = "";
-            String docNo = "";
-            String text = new String();
-            
-            // clear previous map, to avoid the map become too large
-            doc.clear();
-            line = reader.readLine();
-            
-            while(line != null) {
-                // match begin of file
-                if (pDocBegin.matcher(line).find()) {
-                    docStr += line;
-                    line = reader.readLine();
-                    // macth end of file
-                    while(!pDocEnd.matcher(line).find()) {
-                        docStr += line;
-                        line = reader.readLine();
-                    }
-                    docStr += line;
-                    Matcher mNoAndText = pNoAndText.matcher(docStr);
-                    mNoAndText.matches();
-                    docNo = mNoAndText.group(1);
-                    text = mNoAndText.group(2);
-                    // get two groups, put into doc map
-                    doc.put(docNo, text.toCharArray());
-                    break;
-                }
-                line = reader.readLine();
-            }
-            // return doc when not end
-            if(line == null) {
-                reader.close();
-                fis.close();
-                return null;
-            } else {
-                return doc;
-            }
-            
-            
+	public Map<String, Object> nextDocument() throws Exception {
+		refreshreader();
+		return null;
 	}   
-	
+	public void refreshreader() throws Exception{
+		filenum++;
+		fis.close();
+		reader.close();
+		fis = new FileInputStream(filelist.get(filenum).getAbsoluteFile());
+        reader = new BufferedReader(new InputStreamReader(fis));
+	}
 }
