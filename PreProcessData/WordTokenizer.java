@@ -37,7 +37,8 @@ public class WordTokenizer {
             
             String strTexts = new String(texts);
             // get rid of html tag
-            Pattern tag = Pattern.compile("<[/|\\!|\\?|a-zA-Z][^>]*>|[,|.|;|?|!|\"|\'|)|(|{|}|:|\\-|+|\\[|\\]|_|/|>|<]");
+            Pattern tag = Pattern.compile("\\[[<|a-zA-Z|\\d][^\\]]*\\]|<[/|!|\\?|a-zA-Z][^>]*>|[,|.|;|?|!|\"|\'|)|" +
+                    "(|{|}|:|\\-|+|\\[|\\]|_|/|>|<]");
             Matcher mTag = tag.matcher(strTexts);
             String strTextsNoTag = mTag.replaceAll(" ");
             
