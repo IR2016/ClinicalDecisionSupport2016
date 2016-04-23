@@ -66,8 +66,8 @@ public class TrectextCollection implements DocumentCollection {
                 else  { 
                     String strFileName = files[i].getAbsolutePath();
                    // System.out.println("---" + strFileName);
-                    String ignoreFile = ".DS_Store";
-                    if (!strFileName.contains(ignoreFile)) {
+                    String needFile = ".nxml";
+                    if (strFileName.endsWith(needFile)) {
                         filelist.add(files[i]);
                     }
                 } 

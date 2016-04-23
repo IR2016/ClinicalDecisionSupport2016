@@ -33,7 +33,7 @@ public class HW1Main {
 		WordNormalizer normalizer = new WordNormalizer();
 
 		// initiate the BufferedWriter to output result
-		FileWriter wr = new FileWriter(Path.ResultHM1 + dataType);
+		FileWriter wr = new FileWriter(Path.TokenResult + dataType);
 
 		// initiate a doc object, which can hold document number and document content of a document
 		Map<String, Object> doc = null;
