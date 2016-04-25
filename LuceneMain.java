@@ -6,6 +6,8 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.document.Document;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ import java.util.Map;
 public class LuceneMain {
 
     public static void main(String[] args) throws Exception {
+
         // main entrance
         LuceneMain lucene = new LuceneMain();
 
@@ -39,8 +42,7 @@ public class LuceneMain {
         // retrieve each matching document from the ScoreDoc array
         for (int i = 0; i < hits.length; i++) {
             Document doc = se.getDocument(hits[i].doc);
-            System.out.println("DOCNO:" + doc.get("DOCNO") + "  Score:" + hits[i].score + " KEYWORKS:" + doc.get
-                    ("KEYWORKS"));
+            System.out.println("DOCNO:" + doc.get("DOCNO") + "  Score:" + hits[i].score + " KEYWORKS:" + doc.get("KEYWORDS"));
         }
 
         endTime=System.currentTimeMillis();

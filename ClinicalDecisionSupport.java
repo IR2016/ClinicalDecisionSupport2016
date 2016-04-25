@@ -1,5 +1,6 @@
+package controller;
+
 import Classes.Path;
-import Classes.Document;
 import Classes.ResultDoc;
 
 import java.io.BufferedReader;
@@ -11,12 +12,12 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 import Classes.Query;
-import IndexingLucene.MyIndexReader;
-import PseudoRFSearch.PseudoRFRetrievalModel;
-import PreProcessData.StopWordRemover;
-import PreProcessData.WordNormalizer;
-import PreProcessData.WordTokenizer;
+
+import SearchLucene.SearchEngine;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 
 /**
  * Created by qssheep on 2016/4/23.
@@ -24,10 +25,11 @@ import PreProcessData.WordTokenizer;
 
 
 public class ClinicalDecisionSupport {
-    public PseudoRFRetrievalModel pm;
+
     public Query aQuery;
     public Path Path;
     public String ResultFileName;
+    public SearchEngine se;
 
     Pattern frontBodyPat = Pattern.compile(".*<front>(.*)</front>.*<body>(.*)</body>.*");
     Pattern idPat = Pattern.compile(".*<article-id pub-id-type=\"pmc\">(\\d+)</article-id>.*");
@@ -36,47 +38,31 @@ public class ClinicalDecisionSupport {
     Pattern abstractPat = Pattern.compile(".*<abstract>(.+)</abstract>.*");
 
     public ClinicalDecisionSupport(String query) throws Exception{
-        MyIndexReader ixreader = new MyIndexReader("trectext");
-        pm = new PseudoRFRetrievalModel(ixreader);
+
         Path = new Path();
 
-        //tokenization
-        StopWordRemover stopwordRemover = new StopWordRemover();
-        WordNormalizer normalizer = new WordNormalizer();
-        WordTokenizer tokenizer = new WordTokenizer(query.toCharArray());
-        char[] word = null;
-        String wr = "";
-        while ((word = tokenizer.nextToken()) != null) {
-            // each word is transformed into lowercase
-            word = normalizer.lowercase(word);
-            //System.out.println(word);
-            // filter out stopword, and only non-stopword will be written
-            // into result file
-            if (!stopwordRemover.isStopword(word))
-                wr = wr + normalizer.stem(word) + " ";
-        }
         aQuery = new Query();
-        aQuery.SetQueryContent(wr);
+        aQuery.SetQueryContent(query);
         aQuery.SetTopicId("");
     }
     public List<ResultDoc> retrieveQuery() throws Exception{
-        List<Document> results = pm.RetrieveQuery(aQuery, 20, 100, 0.4);
-        List<ResultDoc> result1 = new ArrayList<ResultDoc>();
-        ResultDoc doc = new ResultDoc();
+        se = new SearchEngine();
+        TopDocs topDocs = se.performSearch(aQuery.GetQueryContent(), 10);
+        ScoreDoc[] hits = topDocs.scoreDocs;
         String url, docid;
-        Document resdoc;
+        ResultDoc rdoc = new ResultDoc();
+        List<ResultDoc> result1 = new ArrayList<ResultDoc>();
         File resfile;
-        System.out.println(results.size());
-        for(int i= 0; i < results.size(); i++){
-            resdoc = results.get(i);
-            docid = resdoc.docno();
-            //System.out.println(docid);
+
+        for (int i = 0; i < hits.length; i++) {
+            org.apache.lucene.document.Document doc = se.getDocument(hits[i].doc);
+            docid = doc.get("DOCNO");
+            System.out.println("DOCNO:" + doc.get("DOCNO") + "  Score:" + hits[i].score);
             resfile = SearchFile(docid, Path.DataDir);
             url = ResultFileName;
             System.out.println(url);
-            doc = GetFileContent(url);
-
-            result1.add(doc);
+            rdoc = GetFileContent(url);
+            result1.add(rdoc);
         }
         return result1;
     }

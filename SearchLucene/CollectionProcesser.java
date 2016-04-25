@@ -89,99 +89,101 @@ public class CollectionProcesser {
 
     // YOU SHOULD IMPLEMENT THIS METHOD
     public Map<String, HashMap> nextDocument() throws IOException {
+        int flag = 1;
+        while (flag == 1) {
+            if ( reader != null) { // reach the last file
 
-        if ( reader != null) { // reach the last file
+                StringBuilder docMain = new StringBuilder("");
+                String docText = "";
 
-            StringBuilder docMain = new StringBuilder("");
-            String docText = "";
+                Matcher mDoc = null;
+                String docFront = "";
+                String docBody = "";
 
-            Matcher mDoc = null;
-            String docFront = "";
-            String docBody = "";
+                Matcher mId = null;
+                String id = "";
 
-            Matcher mId = null;
-            String id = "";
+                Matcher mTitle = null;
+                String title = "";
 
-            Matcher mTitle = null;
-            String title = "";
+                Matcher mAbstract = null;
+                String absText = "";
 
-            Matcher mAbstract = null;
-            String absText = "";
+                Matcher mYear = null;
+                String year = "";
 
-            Matcher mYear = null;
-            String year = "";
+                Matcher mKeywords = null;
+                String keywords = "";
 
-            Matcher mKeywords = null;
-            String keywords = "";
+                Pattern bodyBegin = Pattern.compile("<body>");
+                Pattern bodyEnd = Pattern.compile("</body>");
 
-            Pattern bodyBegin = Pattern.compile("<body>");
-            Pattern bodyEnd = Pattern.compile("</body>");
-
-            doc.clear();
-            line = reader.readLine();
-
-            int mark = 1;
-            while(line != null && mark == 1) {
-                if(bodyEnd.matcher(line).find()) {
-                    mark = 0;
-                }
-                docMain.append(line);
+                doc.clear();
                 line = reader.readLine();
+
+                int mark = 1;
+                while(line != null && mark == 1) {
+                    if(bodyEnd.matcher(line).find()) {
+                        mark = 0;
+                    }
+                    docMain.append(line);
+                    line = reader.readLine();
+                }
+                // if the doc with no id, ignor it
+                if (idPat.matcher(docMain).matches()) {
+                    // get front
+                    mDoc = frontBodyPat.matcher(docMain);
+                    if(mDoc.matches()) {
+                        docFront = mDoc.group(1);
+                        docBody = mDoc.group(2);
+                    }
+
+                    mId = idPat.matcher(docFront);
+                    if(mId.matches()) {
+                        id = mId.group(1);
+                    }
+
+                    mTitle = titlePat.matcher(docFront);
+                    if(mTitle.matches()) {
+                        title = mTitle.group(1);
+                    }
+
+                    mAbstract = abstractPat.matcher(docFront);
+                    if(mAbstract.matches()) {
+                        absText = mAbstract.group(1);
+                    }
+
+                    mYear = yearPat.matcher(docFront);
+                    if(mYear.matches()) {
+                        year = mYear.group(1);
+                    }
+
+                    mKeywords = keywordsPat.matcher(docFront);
+                    while (mKeywords.find()) {
+                        keywords += " " + mKeywords.group(1);
+                    }
+
+                    docText += title + " " + keywords + " " + absText + " " + docBody;
+
+                    HashMap<String, String> mulDocFeilds = new HashMap<>();
+                    mulDocFeilds.put("TITLE", title);
+                    mulDocFeilds.put("ABSTRACT", absText);
+                    mulDocFeilds.put("YEAR", year);
+                    mulDocFeilds.put("KEYWORDS", keywords);
+                    mulDocFeilds.put("CONTENT", docText);
+
+                    flag = 0;
+                    doc.put(id,mulDocFeilds);
+
+                }
+                refreshreader();
+
+            } else {
+                flag = 0;
+                doc = null;
             }
-            // if the doc with no id, ignor it
-            if (idPat.matcher(docMain).matches()) {
-                // get front
-                mDoc = frontBodyPat.matcher(docMain);
-                if(mDoc.matches()) {
-                    docFront = mDoc.group(1);
-                    docBody = mDoc.group(2);
-                }
-
-                mId = idPat.matcher(docFront);
-                if(mId.matches()) {
-                    id = mId.group(1);
-                }
-
-                mTitle = titlePat.matcher(docFront);
-                if(mTitle.matches()) {
-                    title = mTitle.group(1);
-                }
-
-                mAbstract = abstractPat.matcher(docFront);
-                if(mAbstract.matches()) {
-                    absText = mAbstract.group(1);
-                }
-
-                mYear = yearPat.matcher(docFront);
-                if(mYear.matches()) {
-                    year = mYear.group(1);
-                }
-
-                mKeywords = keywordsPat.matcher(docFront);
-                while (mKeywords.find()) {
-                    keywords += " " + mKeywords.group(1);
-                }
-
-                docText += title + " " + keywords + " " + absText + " " + docBody;
-
-                HashMap<String, String> mulDocFeilds = new HashMap<>();
-                mulDocFeilds.put("TITLE", title);
-                mulDocFeilds.put("ABSTRACT", absText);
-                mulDocFeilds.put("YEAR", year);
-                mulDocFeilds.put("KEYWORDS", keywords);
-                mulDocFeilds.put("CONTENT", docText);
-
-                doc.put(id,mulDocFeilds);
-
-            } else {  // very few doc has no pmc
-                System.exit(11);
-            }
-
-            refreshreader();
-
-        } else {
-            doc = null;
         }
+
 
         return doc;
     }

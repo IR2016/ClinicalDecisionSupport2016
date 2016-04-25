@@ -3,6 +3,7 @@ package SearchLucene;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,9 @@ public class SearchEngine {
 
     /** Creates a new instance of SearchEngine */
     public SearchEngine() throws IOException {
+//        Path p = Paths.get("");
+//        String curPath = p.toAbsolutePath().toString() + Classes.Path.IndexTextDir;
+
         directory = FSDirectory.open(Paths.get(Classes.Path.IndexTextDir));
         reader = DirectoryReader.open(directory);
         searcher = new IndexSearcher(reader);
