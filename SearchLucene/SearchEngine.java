@@ -18,8 +18,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.similarities.LMDirichletSimilarity;
-import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -39,7 +38,7 @@ public class SearchEngine {
         reader = DirectoryReader.open(directory);
         searcher = new IndexSearcher(reader);
         // set similarity, LMDirichletSimilarity, can set mu LMDirichletSimilarity(float mu)
-        Similarity lmd = new LMDirichletSimilarity();
+        Similarity lmd = new LMJelinekMercerSimilarity((float) 0.8);
         searcher.setSimilarity(lmd);
         //StandardAnalyzer or EnglishAnalyzer
         parser = new QueryParser("CONTENT", new StandardAnalyzer());
