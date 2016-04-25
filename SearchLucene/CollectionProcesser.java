@@ -28,7 +28,9 @@ public class CollectionProcesser {
     Pattern frontBodyPat = Pattern.compile(".*<front>(.*)</front>.*<body>(.*)</body>.*");
     Pattern idPat = Pattern.compile(".*<article-id pub-id-type=\"pmc\">(\\d+)</article-id>.*");
     Pattern titlePat = Pattern.compile(".*<article-title>(.+)</article-title>.*");
-    Pattern yearPat = Pattern.compile(".*<pub-date pub-type=\"collection\">.*<year>(.+)</year>.*</pub-date>.*");
+    Pattern yearPat = Pattern.compile(".*<pub-date pub-type=\".*\">.*<year>(.+)</year>.*</pub-date>.*");
+//    Pattern allKeywordsPat = Pattern.compile(".*<kwd-group>(<title>.*</title>)*(.*)</kwd-group>.*");
+    Pattern keywordsPat = Pattern.compile("<kwd>([^>]*)</kwd>");
     Pattern abstractPat = Pattern.compile(".*<abstract>(.+)</abstract>.*");
 
     // YOU SHOULD IMPLEMENT THIS METHOD
@@ -106,6 +108,12 @@ public class CollectionProcesser {
             Matcher mAbstract = null;
             String absText = "";
 
+            Matcher mYear = null;
+            String year = "";
+
+            Matcher mKeywords = null;
+            String keywords = "";
+
             Pattern bodyBegin = Pattern.compile("<body>");
             Pattern bodyEnd = Pattern.compile("</body>");
 
@@ -144,11 +152,23 @@ public class CollectionProcesser {
                     absText = mAbstract.group(1);
                 }
 
-                docText += title + " " + absText + " " + docBody;
+                mYear = yearPat.matcher(docFront);
+                if(mYear.matches()) {
+                    year = mYear.group(1);
+                }
+
+                mKeywords = keywordsPat.matcher(docFront);
+                while (mKeywords.find()) {
+                    keywords += " " + mKeywords.group(1);
+                }
+
+                docText += title + " " + keywords + " " + absText + " " + docBody;
 
                 HashMap<String, String> mulDocFeilds = new HashMap<>();
                 mulDocFeilds.put("TITLE", title);
                 mulDocFeilds.put("ABSTRACT", absText);
+                mulDocFeilds.put("YEAR", year);
+                mulDocFeilds.put("KEYWORDS", keywords);
                 mulDocFeilds.put("CONTENT", docText);
 
                 doc.put(id,mulDocFeilds);

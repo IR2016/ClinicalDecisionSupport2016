@@ -75,17 +75,14 @@ public class IndexBuilder {
     public void indexDocument(String docno, HashMap<String, String> mulDocFields) throws Exception {
         IndexWriter writer = getIndexWriter(false);
         Document doc = new Document();
-        String content = mulDocFields.get("CONTENT");
         doc.add(new StringField("DOCNO", docno, Field.Store.YES));
-//        doc.add(new StringField("year", contents.get("year"), Field.Store.YES));
-//        doc.add(new StringField("keyword", contents.get("keyword"), Field.Store.YES));
-        doc.add(new TextField("CONTENT", content , Field.Store.NO));
+        doc.add(new TextField("TITLE", mulDocFields.get("TITLE"), Field.Store.YES));
+        doc.add(new TextField("ABSTRACT", mulDocFields.get("ABSTRACT"), Field.Store.YES));
+        doc.add(new StringField("YEAR", mulDocFields.get("YEAR"), Field.Store.YES));
+        doc.add(new TextField("KEYWORDS", mulDocFields.get("KEYWORDS"), Field.Store.YES));
+        doc.add(new TextField("CONTENT", mulDocFields.get("CONTENT") , Field.Store.NO));
         writer.addDocument(doc);
     }
-
-
-
-
 
     public void closeIndexWriter() throws IOException {
         if (indexWriter != null) {

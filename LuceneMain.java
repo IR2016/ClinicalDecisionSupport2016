@@ -39,7 +39,8 @@ public class LuceneMain {
         // retrieve each matching document from the ScoreDoc array
         for (int i = 0; i < hits.length; i++) {
             Document doc = se.getDocument(hits[i].doc);
-            System.out.println("DOCNO:" + doc.get("DOCNO") + "  Score:" + hits[i].score);
+            System.out.println("DOCNO:" + doc.get("DOCNO") + "  Score:" + hits[i].score + " KEYWORKS:" + doc.get
+                    ("KEYWORKS"));
         }
 
         endTime=System.currentTimeMillis();
