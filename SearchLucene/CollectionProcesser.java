@@ -163,6 +163,7 @@ public class CollectionProcesser {
                         keywords += " " + mKeywords.group(1);
                     }
 
+//                    docText += title + " " + keywords + " " + absText;
                     docText += title + " " + keywords + " " + absText + " " + docBody;
 
                     HashMap<String, String> mulDocFeilds = new HashMap<>();

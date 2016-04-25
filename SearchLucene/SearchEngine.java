@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -38,7 +39,7 @@ public class SearchEngine {
         reader = DirectoryReader.open(directory);
         searcher = new IndexSearcher(reader);
         // set similarity, LMDirichletSimilarity, can set mu LMDirichletSimilarity(float mu)
-        Similarity lmd = new LMJelinekMercerSimilarity((float) 0.8);
+        Similarity lmd = new LMDirichletSimilarity();
         searcher.setSimilarity(lmd);
         //StandardAnalyzer or EnglishAnalyzer
         parser = new QueryParser("CONTENT", new StandardAnalyzer());

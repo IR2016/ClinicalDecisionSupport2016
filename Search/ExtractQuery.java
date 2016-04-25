@@ -88,7 +88,7 @@ public class ExtractQuery {
 		//NT: you can simply pick up title only for query, or you can also use title + description + narrative for the query content.
 		Pattern tBegin = Pattern.compile("<topic\\s*.*[^>]*>");
 		Pattern tEnd = Pattern.compile("</topic>");
-		Pattern tSummary = Pattern.compile(".*<summary>\\s*(.*)\\s*</summary>.*");
+		Pattern tSummary = Pattern.compile(".*<description>\\s*(.*)\\s*</description>.*");
 //		Pattern tNumAndType = Pattern.compile("<.*number=\"(\\d+)\".*>");
 		Pattern tNumAndType = Pattern.compile(".*<topic\\s*number=\"(\\d+)\"\\s*type=\"(.*)\"\\s*[^>]*>.*");
 
@@ -127,27 +127,41 @@ public class ExtractQuery {
 			line = br.readLine();
 		}
 		// pre-process topic titles
-		stopWordsLoader();
+//		stopWordsLoader();
+//		for (Map.Entry<String, String> topic : topics.entrySet() ) {
+//			String topicContent = topic.getValue();
+//			String topicId = topic.getKey();
+//			query = new Query();
+//
+//			String[] tokens = queryToLowercase(queryTokenizer(topicContent));
+//			// remove stop words and stem every token
+//			String queryContent = "";
+//			for (int i = 0; i < tokens.length; i++) {
+//				if (!isStopword(tokens[i])) {
+//					queryContent = queryContent + queryStemmer(tokens[i]) + " ";
+//				}
+//			}
+//			query.SetQueryContent(queryContent);
+//			query.SetTopicId(topicId);
+//
+////			System.out.println(query.GetTopicId() + "/" + query.GetQueryContent());
+//			// put all querys to a query list
+//			queries.add(query);
+//		}
+
+		// do not normalize
+
 		for (Map.Entry<String, String> topic : topics.entrySet() ) {
-			String topicContent = topic.getValue();
-			String topicId = topic.getKey();
 			query = new Query();
+			query.SetQueryContent(queryTokenizer(topic.getValue()));
+			query.SetTopicId(topic.getKey());
 
-			String[] tokens = queryToLowercase(queryTokenizer(topicContent));
-			// remove stop words and stem every token
-			String queryContent = "";
-			for (int i = 0; i < tokens.length; i++) {
-				if (!isStopword(tokens[i])) {
-					queryContent = queryContent + queryStemmer(tokens[i]) + " ";
-				}
-			}
-			query.SetQueryContent(queryContent);
-			query.SetTopicId(topicId);
-
-//			System.out.println(query.GetTopicId() + "/" + query.GetQueryContent());
 			// put all querys to a query list
 			queries.add(query);
 		}
+
+
+
 
 		return queries;
 	}

@@ -21,7 +21,7 @@ public class Evaluation {
     public Map<Integer, List<String>> groundtruth;
     public Map<Integer, List<String>> result;
     public int maxtopicnumber = 30;
-    public int rlvdocnumber = 50;
+    public int rlvdocnumber = 10;
 
     public void Evaluation() throws Exception{
         groundtruth = new HashMap<Integer, List<String>>();
