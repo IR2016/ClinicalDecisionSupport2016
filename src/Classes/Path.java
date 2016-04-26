@@ -8,12 +8,14 @@ public class Path {
 	public static String TokenResult="..//index//result.";
 	
 	public static String StopwordDir="stopword.txt";//address of stopwords.txt
-	public static String DataDir="..//data"; //data
+//	public static String DataDir="..//data"; //data
+	public static String DataDir="//Users//JS//Documents//06_InformationRerieval//WebClinic//IRFinalProject//data";
 
-	public static String IndexTextDir="..//index//indextext//";//address of generated Text index file
+	public static String IndexTextDir="//Users//JS//Documents//06_InformationRerieval//WebClinic//IRFinalProject//index//indextext//";//address of generated Text index file
+
+//	public static String IndexTextDir="..//index//indextext//";//address of generated Text index file
 	public static String IndexWebDir="..//index//indexweb//";//address of generated Web index file
 
 	public static String TopicDir="topics.xml";//address of topics.txt
-
 
 }

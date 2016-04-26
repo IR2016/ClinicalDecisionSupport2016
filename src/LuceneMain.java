@@ -1,4 +1,3 @@
-import IndexingLucene.PreProcessedCorpusReader;
 import SearchLucene.CollectionProcesser;
 import SearchLucene.IndexBuilder;
 import SearchLucene.SearchEngine;
@@ -22,16 +21,30 @@ public class LuceneMain {
         long startTime=System.currentTimeMillis();
         long endTime=System.currentTimeMillis();
 
-		startTime=System.currentTimeMillis();
-        lucene.buildIndex("trectext");
-		endTime=System.currentTimeMillis();
-		System.out.println("index text corpus running time: "+(endTime-startTime)/60000.0+" min");
+//		startTime=System.currentTimeMillis();
+//        lucene.buildIndex("trectext");
+//		endTime=System.currentTimeMillis();
+//		System.out.println("index text corpus running time: "+(endTime-startTime)/60000.0+" min");
 
         // Search Part
         startTime=System.currentTimeMillis();
         // instantiate the search engine
         SearchEngine se = new SearchEngine();
-        String queryString = "An 8-year-old boy presents with a swollen right knee lower extremity pain and fever The parents report no history of trauma The parents noticed a tick bite several months earlier";
+
+
+
+        String queryString = "automobile accident where he sustained a skull fracture." +
+                " clear fluid dripping from his nose." +
+                "severe headache and fever." +
+                " Nuchal rigidity was found on physical examination.";
+//        String queryString = "A 44-year-old man was recently in an automobile accident where he sustained a skull fracture." +
+//                "    In the emergency room, he noted clear fluid dripping from his nose." +
+//                "    The following day he started complaining of severe headache and fever." +
+//                "     Nuchal rigidity was found on physical examination.";
+//        String queryString = "headache and fever Nuchal rigidity automobile accident where he sustained a skull " +
+//                "fracture clear fluid dripping from his nose. severe headache and fever." +
+//                " Nuchal rigidity was found on physical examination.";
+//        String queryString = "headache and fever Nuchal rigidity";
         System.out.println("Search for:" + queryString);
         // retrieve top 100 matching document list for the query "Notre Dame museum"
         TopDocs topDocs = se.performSearch(queryString, 10);
@@ -42,7 +55,7 @@ public class LuceneMain {
         // retrieve each matching document from the ScoreDoc array
         for (int i = 0; i < hits.length; i++) {
             Document doc = se.getDocument(hits[i].doc);
-            System.out.println("DOCNO:" + doc.get("DOCNO") + "  Score:" + hits[i].score + " KEYWORKS:" + doc.get("KEYWORDS"));
+            System.out.println("DOCNO:" + doc.get("DOCNO") + "  Score:" + hits[i].score + " CONTENT:" + doc.get("CONTENT"));
         }
 
         endTime=System.currentTimeMillis();
@@ -106,7 +119,33 @@ public class LuceneMain {
 
     }
 
+        /*
+        *   <topic number="12" type="test">
+    <description>A 44-year-old man was recently in an automobile accident where he sustained a skull fracture.
+    In the emergency room, he noted clear fluid dripping from his nose.
+    The following day he started complaining of severe headache and fever.
+     Nuchal rigidity was found on physical examination.</description>
+    <summary>A 44-year-old man complains of severe headache and fever.
+    Nuchal rigidity was found on physical examination.</summary>
+  </topic>
 
+
+  12 0 2630299 0
+12 0 2630300 0
+12 0 2630302 0
+12 0 2630936 0
+12 0 2631053 0
+12 0 2631758 0
+12 0 2631759 0
+12 0 2631890 0
+12 0 2634631 0
+12 0 2635124 0
+12 0 2637257 0
+12 0 2637292 0
+12 0 2640162 0
+12 0 2643119 0
+12 0 2649908 0
+        * */
 
 
 

@@ -1,21 +1,18 @@
 package controller;
 
+import SearchLucene.SearchEngine;
+
 import Classes.Path;
 import Classes.ResultDoc;
+import Classes.Query;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-import Classes.Query;
-
-import SearchLucene.SearchEngine;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 
@@ -49,9 +46,10 @@ public class ClinicalDecisionSupport {
         se = new SearchEngine();
         TopDocs topDocs = se.performSearch(aQuery.GetQueryContent(), 10);
         ScoreDoc[] hits = topDocs.scoreDocs;
-        String url, docid;
-        ResultDoc rdoc = new ResultDoc();
+        String url;
+        ResultDoc rdoc;
         List<ResultDoc> result1 = new ArrayList<ResultDoc>();
+        String docid;
         File resfile;
 
         for (int i = 0; i < hits.length; i++) {

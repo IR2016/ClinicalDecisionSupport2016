@@ -44,7 +44,8 @@ public class IndexBuilder {
             IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
             // set buffer
             config.setMaxBufferedDocs(10000);
-            // set similarity, LMDirichletSimilarity, can set mu LMDirichletSimilarity(float mu)
+            // set similarity, LMDirichletSimilarity, LMJelinekMercerSimilarity, BM25Similarity, TFIDFSimilarity
+            // set mu LMDirichletSimilarity (float mu)
             Similarity lmd = new LMDirichletSimilarity();
             config.setSimilarity(lmd);
             indexWriter = new IndexWriter(directory, config);

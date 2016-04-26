@@ -1,0 +1,119 @@
+@CHARSET "UTF-8";
+body { 
+	background:url(medical.png) no-repeat center center;
+	/*background-size: cover;*/
+	font-size:16px;
+	font-family:'Raleway', sans-serif;
+}
+
+.container{
+	width:1000px;
+	margin:auto;
+	text-align: center;
+}
+
+
+.header{
+	margin-top:100px;
+	padding:20px;
+}
+
+h1{
+	color:white;
+	font-size: 50px;
+	font-weight: 200;
+
+}
+h3{
+	color:#F5F5F5;
+	font-weight:200;
+}
+
+.searchBar{
+	margin:40px 100px;
+
+}
+
+.form-control{
+	height:50px;
+}
+
+/*.btn{
+	height:50px !important;
+	width:100px !important;
+}*/
+
+.selection{
+	border-radius: 0px !important;
+}
+
+.footer{
+	margin:200px 50px auto;
+}
+
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+.customize-input {
+	outline: none;
+    padding: 13px 10px;
+    background: #fff;
+    border: none;
+    font-size: 16px;
+    color: #999;
+    /*width: 95%;*/
+    height: 80px;
+	border-radius: 0 !important;
+    border: 14px solid rgba(120, 191, 218, 1);
+}
+
+.btn.customize-btn {
+	width: 100%;
+	height: 80px;
+	border-radius: 0;
+	font-size: 18px;
+	font-weight: 400;
+	color: white;
+	background-color: rgba(120, 191, 218, 1);
+	text-transform: uppercase;
+	transition: all .25s ease;
+}
+
+.customize-input:focus {
+	border-color: rgba(120, 191, 218, 1);
+	box-shadow: inset 0 0px 0px rgba(0,0,0,.075),0 0 0px rgba(102,175,233,.6);
+}
+
+.btn.customize-btn:hover {
+	background-color: #0E2F44;
+	transition: all .25s ease;
+}
+
+.nav-tabs.nav-justified>li.customize-tab>a {
+	border-radius: 0;
+	background-color: rgba(120, 191, 218, 1);
+	font-size: 18px;
+	font-weight: 400;
+	color: white;
+	border-width: 0;
+	
+}
+
+.nav-tabs.nav-justified>li.customize-tab {
+	width: 200px;
+	display: inline-block;
+}
+
+.nav-tabs.nav-justified>li.customize-tab.inactive>a {
+	/*background-color: rgba(33, 235, 198, .5);*/
+
+	opacity: .4;
+}
+
+#by{
+	color:lightgrey !important;
+}
