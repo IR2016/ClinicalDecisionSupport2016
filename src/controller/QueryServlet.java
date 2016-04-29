@@ -124,7 +124,7 @@ public class QueryServlet extends HttpServlet {
     		}
     		
     		System.out.println("Query is: " + query);
-    		
+    		request.setAttribute("query", query);
     		//process the searchRes
     		List<ResultDoc> searchRes = new ArrayList<>();
         	List<HashMap<String, String>> res = new ArrayList<HashMap<String, String>>();

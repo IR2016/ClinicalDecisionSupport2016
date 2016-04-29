@@ -21,7 +21,7 @@
         String content = (String)request.getAttribute("currentContent");
     
     %>
-    <div style="width:1200px;margin:auto;">
+    <div style="width:1200px;margin:auto">
     <h1><%=title %></h1>
     
     <p><%=content %></p>

@@ -27,7 +27,8 @@ public class ClinicalDecisionSupport {
     public Path Path;
     public String ResultFileName;
     public SearchEngine se;
-
+    public List<File> files;
+    public int currentpos;
     Pattern frontBodyPat = Pattern.compile(".*<front>(.*)</front>.*<body>(.*)</body>.*");
     Pattern idPat = Pattern.compile(".*<article-id pub-id-type=\"pmc\">(\\d+)</article-id>.*");
     Pattern titlePat = Pattern.compile(".*<article-title>(.+)</article-title>.*");
@@ -37,14 +38,21 @@ public class ClinicalDecisionSupport {
     public ClinicalDecisionSupport(String query) throws Exception{
 
         Path = new Path();
-
+        files = new ArrayList<File>();
+        currentpos = 0;
         aQuery = new Query();
         aQuery.SetQueryContent(query);
         aQuery.SetTopicId("");
     }
     public List<ResultDoc> retrieveQuery() throws Exception{
+        long startTime=System.currentTimeMillis();
+
         se = new SearchEngine();
         TopDocs topDocs = se.performSearch(aQuery.GetQueryContent(), 10);
+        long endTime=System.currentTimeMillis();
+        System.out.println("search time: "+(endTime-startTime)/60000.0+" min");
+
+        startTime=System.currentTimeMillis();
         ScoreDoc[] hits = topDocs.scoreDocs;
         String url;
         ResultDoc rdoc;
@@ -62,6 +70,8 @@ public class ClinicalDecisionSupport {
             rdoc = GetFileContent(url);
             result1.add(rdoc);
         }
+        endTime=System.currentTimeMillis();
+        System.out.println("prepare result time: "+(endTime-startTime)/60000.0+" min");
         return result1;
     }
 
@@ -133,25 +143,70 @@ public class ClinicalDecisionSupport {
         return rsd;
     }
     public File SearchFile(String filename, String strPath) throws Exception{
-        String fileend = filename+".nxml";
         File dir = new File(strPath);
-        File[] files = dir.listFiles();
-        if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                String fileName = files[i].getName();
-                if (files[i].isDirectory()) { // 判断是文件还是文件夹
-                    SearchFile(filename, files[i].getAbsolutePath()); // 获取文件绝对路径
-                } else if (fileName.endsWith(fileend)) { // 判断文件名是否以.avi结尾
-                    String strFileName = files[i].getAbsolutePath();
-                    ResultFileName = strFileName;
-                    System.out.println("---" + strFileName);
-                    return files[i];
-                } else {
-                    continue;
-                }
+        String fileend = filename+".nxml";
+        File currentfile;
+        File inputfile = new File(Path.DataDir + "//dir.txt");
+        FileReader fr = new FileReader(inputfile);
+        BufferedReader reader = new BufferedReader(fr);
+        String line = reader.readLine();
+        while(line != null){
+            dir = new File(line);
+            files.add(dir);
+            line = reader.readLine();
+        }
+        reader.close();
+        fr.close();
+        fr.close();
+        while(currentpos < files.size()) {
+            currentfile = new File(files.get(currentpos).toPath() + "\\" + fileend);
+            //System.out.println(currentfile.getPath());
+            if(currentfile.exists()){
+                ResultFileName = currentfile.getPath();
+                System.out.println(files.get(currentpos).toPath() +  "\\" +fileend);
+
             }
 
+            currentpos++;
         }
+        /*
+        File outputfile = new File(Path.DataDir + "//dir.txt");
+        FileWriter fw = new FileWriter(outputfile);
+        BufferedWriter writer = new BufferedWriter(fw);
+        String fileend = filename+".nxml";
+        File dir = new File(strPath);
+        File currentfile;
+        File[] currentfiles = dir.listFiles();
+        files.add(dir);
+        writer.write(dir.toPath().toString());
+        writer.newLine();
+        while(currentpos < files.size()) {
+            currentfile = new File(files.get(currentpos).toPath() + "\\" + fileend);
+            //System.out.println(currentfile.getPath());
+            if(currentfile.exists()){
+                ResultFileName = currentfile.getPath();
+                System.out.println(files.get(currentpos).toPath() +  "\\" +fileend);
+
+            }
+            else {
+                currentfiles = files.get(currentpos).listFiles();
+                if (currentfiles != null) {
+                    for (int i = 0; i < currentfiles.length; i++) {
+                        if(currentfiles[i].isDirectory()) {
+                            files.add(currentfiles[i]);
+                            writer.write(currentfiles[i].toPath().toString());
+                            writer.newLine();
+                        }
+                    }
+                }
+            }
+            currentpos++;
+        }
+
+
+        writer.close();
+        fw.close();
+        */
         return null;
     }
 
